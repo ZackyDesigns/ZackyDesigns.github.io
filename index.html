@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Zacky Interactive CV</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, #e6e8eb 0%, #f5f6f8 100%);
+  margin: 0;
+  padding: 0;
+}
+
+/* Floating animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Container */
+.container {
+  position: relative;
+  background: #e6e8eb;
+  box-shadow: 12px 12px 24px #bfc1c2, -12px -12px 24px #ffffff;
+  border-radius: 25px;
+  width: 90%;
+  max-width: 1000px;
+  padding: 30px;
+  text-align: center;
+  margin: 60px auto 0 auto;
+  z-index: 10;
+}
+
+/* PFP */
+.pfp-wrapper {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 20px auto;
+  border-radius: 50%;
+  background: #e6e8eb;
+  box-shadow: 6px 6px 14px #bfc1c2, -6px -6px 14px #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pfp-wrapper:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 0 20px rgba(255,255,255,0.7), inset 6px 6px 14px #bfc1c2, inset -6px -6px 14px #ffffff;
+}
+
+.pfp {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #e6e8eb; /* small frame */
+}
+
+/* Header */
+header { margin-bottom: 20px; }
+
+/* Navigation */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+nav button {
+  padding: 12px 24px;
+  border-radius: 20px;
+  border: none;
+  background: #e6e8eb;
+  box-shadow: 6px 6px 14px #bfc1c2, -6px -6px 14px #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+nav button:hover {
+  box-shadow: inset 6px 6px 14px #bfc1c2, inset -6px -6px 14px #ffffff;
+  transform: translateY(2px);
+}
+
+nav button.active {
+  box-shadow: inset 6px 6px 14px #bfc1c2, inset -6px -6px 14px #ffffff;
+}
+
+/* Sections */
+.section { display: none; padding: 20px 10px; text-align: center; }
+.active-section { display: block; }
+
+/* Software Neo Buttons */
+.skill-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.skill-wrapper {
+  width: 140px;
+  height: 140px;
+  position: relative;
+  border-radius: 50%;
+  background: #e6e8eb;
+  box-shadow: 6px 6px 14px #bfc1c2, -6px -6px 14px #ffffff;
+  transition: all 0.3s ease;
+}
+
+.skill-wrapper:hover {
+  box-shadow: inset 6px 6px 14px #bfc1c2, inset -6px -6px 14px #ffffff;
+}
+
+.neo-btn {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
+  background: #e6e8eb;
+  color: #333;
+  box-shadow: 6px 6px 14px #bfc1c2, -6px -6px 14px #ffffff;
+  transition: all 0.3s ease;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.neo-btn::before {
+  content: "";
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  top: -10%;
+  left: -10%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.neo-btn:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  box-shadow: 0 0 20px rgba(255,255,255,0.7), inset 6px 6px 14px #bfc1c2, inset -6px -6px 14px #ffffff;
+}
+
+.neo-btn:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Thick circular bars */
+.bar-fill {
+  stroke-width: 12;
+  stroke-linecap: round;
+  stroke-dasharray: 377;
+  stroke-dashoffset: 377;
+  transition: stroke-dashoffset 1.5s ease;
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #e6e8eb;
+  box-shadow: 6px 6px 14px #bfc1c2, -6px -6px 14px #ffffff;
+  border-radius: 10px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.skill-wrapper:hover .tooltip { opacity: 1; }
+
+/* Creative Skill Bars */
+.creative-skills {
+  background: #f7f7f7;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  max-width: 700px;
+  margin: 20px auto 0 auto;
+  position: relative;
+}
+
+.skill {
+  margin: 20px 0;
+  position: relative;
+}
+
+.skill-name {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+}
+
+.skill-bar-container {
+  width: 100%;
+  height: 22px;
+  background: #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.skill-bar {
+  width: 0;
+  height: 100%;
+  border-radius: 12px 0 0 12px;
+  transition: width 1s ease, box-shadow 0.6s ease;
+}
+
+.skill-bar[data-gradient="Graphic Design"] { background: linear-gradient(90deg,#ff7f50,#ffb347); }
+.skill-bar[data-gradient="3D Design"] { background: linear-gradient(90deg,#6a11cb,#2575fc); }
+.skill-bar[data-gradient="Motion Graphics"] { background: linear-gradient(90deg,#f7971e,#ffd200); }
+.skill-bar[data-gradient="Video Editing"] { background: linear-gradient(90deg,#00c6ff,#0072ff); }
+.skill-bar[data-gradient="Photography"] { background: linear-gradient(90deg,#f953c6,#b91d73); }
+.skill-bar[data-gradient="Drawing"] { background: linear-gradient(90deg,#43e97b,#38f9d7); }
+
+.skill-bar.animate {
+  box-shadow: 0 0 15px var(--bar-color), 0 0 25px var(--bar-color) inset;
+}
+
+/* Video preview */
+.skill-video-preview {
+  position: absolute;
+  top: -220px;
+  right: -50px;
+  width: 320px;
+  height: 180px;
+  display: none;
+  z-index: 100;
+}
+.skill-video-preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Projects */
+.project-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.project-panel {
+  background: #e6e8eb;
+  box-shadow: 6px 6px 14px #bfc1c2, -6px -6px 14px #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  min-width: 200px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.project-panel:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 0 20px rgba(255,255,255,0.7), inset 6px 6px 14px #bfc1c2, inset -6px -6px 14px #ffffff;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="pfp-wrapper" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'});">
+    <img src="media/images/Zacky in Monkey Suit.jpg" alt="Zacky PFP" class="pfp">
+  </div>
+
+  <header>
+    <h1>Zacky Interactive CV</h1>
+    <p>Creative Designer • Motion Artist • Visual Problem Solver • Aspiring Game Designer & Story Creator</p>
+  </header>
+
+  <nav>
+    <button data-target="about" class="active">About</button>
+    <button data-target="experience">Experience</button>
+    <button data-target="skills">Skills</button>
+    <button data-target="projects">Projects</button>
+    <button data-target="contact">Contact</button>
+  </nav>
+
+  <section id="about" class="section active-section">
+    <h2>About Me</h2>
+    <p>I have experience in almost every media type: content creation, physical media, and video/motion. My vision is to become a Game Designer & Story Creator, blending all skills into unique experiences.</p>
+  </section>
+
+  <section id="experience" class="section">
+    <h2>Experience</h2>
+    <p><strong>3D/Graphic/Motion Design – Mar 2025 to Current</strong></p>
+    <p>• Posters, banners, vending wraps • Social media content • Print production collaboration • Brand presence improvement • Minimalistic templates</p>
+    <p><strong>Freelance Design Projects – 2021 to 2024</strong></p>
+    <p>• Logo design • Motion graphics • Digital illustrations</p>
+  </section>
+
+  <section id="skills" class="section">
+    <h2>Software Skills</h2>
+    <div class="skill-container">
+      <div class="skill-wrapper">
+        <span class="tooltip">95%</span>
+        <svg width="140" height="140"><circle cx="70" cy="70" r="60" fill="none" class="bar-fill"></circle></svg>
+        <div class="neo-btn">AI</div>
+      </div>
+      <div class="skill-wrapper">
+        <span class="tooltip">90%</span>
+        <svg width="140" height="140"><circle cx="70" cy="70" r="60" fill="none" class="bar-fill"></circle></svg>
+        <div class="neo-btn">PS</div>
+      </div>
+      <div class="skill-wrapper">
+        <span class="tooltip">70%</span>
+        <svg width="140" height="140"><circle cx="70" cy="70" r="60" fill="none" class="bar-fill"></circle></svg>
+        <div class="neo-btn">ID</div>
+      </div>
+      <div class="skill-wrapper">
+        <span class="tooltip">80%</span>
+        <svg width="140" height="140"><circle cx="70" cy="70" r="60" fill="none" class="bar-fill"></circle></svg>
+        <div class="neo-btn">AE</div>
+      </div>
+      <div class="skill-wrapper">
+        <span class="tooltip">75%</span>
+        <svg width="140" height="140"><circle cx="70" cy="70" r="60" fill="none" class="bar-fill"></circle></svg>
+        <div class="neo-btn">Blender</div>
+      </div>
+    </div>
+
+    <div class="creative-skills">
+      <h2>Creative Skills</h2>
+      <div class="skill" data-video="media/videos/graphic.mp4">
+        <span class="skill-name">Graphic Design</span>
+        <div class="skill-bar-container" data-video="media/videos/graphic.mp4">
+          <div class="skill-bar" data-gradient="Graphic Design" style="--skill-level:90%; --bar-color:#ff7f50"></div>
+        </div>
+      </div>
+      <div class="skill" data-video="media/videos/Minigun Wireframe 2.mp4">
+        <span class="skill-name">3D Design</span>
+        <div class="skill-bar-container" data-video="media/videos/Minigun Wireframe.mp4">
+          <div class="skill-bar" data-gradient="3D Design" style="--skill-level:75%; --bar-color:#6a11cb"></div>
+        </div>
+      </div>
+      <div class="skill" data-video="media/videos/Melting Glitch YOUR TEXT HERE.mp4">
+        <span class="skill-name">Motion Graphics</span>
+        <div class="skill-bar-container" data-video="media/videos/Melting Glitch YOUR TEXT HERE.mp4">
+          <div class="skill-bar" data-gradient="Motion Graphics" style="--skill-level:85%; --bar-color:#f7971e"></div>
+        </div>
+      </div>
+      <div class="skill" data-video="media/videos/KA - Video_1.mp4">
+        <span class="skill-name">Video Editing</span>
+        <div class="skill-bar-container" data-video="media/videos/KA - Video_1.mp4">
+          <div class="skill-bar" data-gradient="Video Editing" style="--skill-level:80%; --bar-color:#00c6ff"></div>
+        </div>
+      </div>
+      <div class="skill" data-video="media/videos/photo.mp4">
+        <span class="skill-name">Photography</span>
+        <div class="skill-bar-container" data-video="media/videos/photo.mp4">
+          <div class="skill-bar" data-gradient="Photography" style="--skill-level:70%; --bar-color:#f953c6"></div>
+        </div>
+      </div>
+      <div class="skill" data-video="media/videos/drawing.mp4">
+        <span class="skill-name">Drawing</span>
+        <div class="skill-bar-container" data-video="media/videos/drawing.mp4">
+          <div class="skill-bar" data-gradient="Drawing" style="--skill-level:65%; --bar-color:#43e97b"></div>
+        </div>
+      </div>
+      <div class="skill-video-preview" id="skillVideoPreview">
+        <video src="" autoplay muted loop></video>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="section">
+    <h2>Projects</h2>
+    <div class="project-container">
+      <div class="project-panel" onclick="window.open('projects/brand-campaign.html', '_blank')">Brand Campaign</div>
+      <div class="project-panel" onclick="window.open('projects/animated-short.html', '_blank')">Animated Short</div>
+      <div class="project-panel" onclick="window.open('projects/3d-visual.html', '_blank')">3D Product Visualization</div>
+    </div>
+  </section>
+
+  <section id="contact" class="section">
+    <h2>Contact Me</h2>
+    <p>Phone: +27 72 305 9959</p>
+    <p>Email: zackyportfolio@gmail.com</p>
+    <p>Portfolio: <a href="https://your-portfolio-link.com" target="_blank">View My Work</a></p>
+  </section>
+</div>
+
+<script>
+// Navigation and creative bars animation
+const buttons = document.querySelectorAll('nav button');
+let creativeAnimated = false;
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.getAttribute('data-target');
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section'));
+    document.getElementById(target).classList.add('active-section');
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    if(target === 'skills' && !creativeAnimated) {
+      document.querySelectorAll('.skill-bar').forEach(bar => {
+        const level = bar.style.getPropertyValue('--skill-level');
+        bar.style.width = level;
+        bar.classList.add('animate');
+      });
+      creativeAnimated = true;
+    }
+  });
+});
+
+// Circular skill bars
+const skillData = { AI: 95, PS: 90, ID: 70, AE: 80, Blender: 75 };
+const colorMap = { AI: '#FF9A00', PS: '#31A8FF', ID: '#FF3366', AE: '#999999', Blender: '#F5792A' };
+
+document.querySelectorAll('.skill-wrapper').forEach(wrapper => {
+  const label = wrapper.querySelector('.neo-btn').textContent;
+  const circle = wrapper.querySelector('circle');
+  const radius = 60;
+  const circumference = 2 * Math.PI * radius;
+
+  circle.style.stroke = colorMap[label];
+  circle.style.strokeDasharray = circumference;
+  circle.style.strokeDashoffset = circumference;
+
+  wrapper.addEventListener('mouseenter', () => {
+    circle.style.transition = 'stroke-dashoffset 1.5s ease';
+    circle.style.strokeDashoffset = circumference - (circumference * skillData[label] / 100);
+  });
+  // Keep the percentage after hover
+  wrapper.addEventListener('mouseleave', () => {
+    circle.style.strokeDashoffset = circumference - (circumference * skillData[label] / 100);
+  });
+});
+
+// Video previews
+const skillVideoPreview = document.getElementById('skillVideoPreview');
+document.querySelectorAll('.skill').forEach(skill => {
+  skill.addEventListener('mouseenter', () => {
+    const vidSrc = skill.getAttribute('data-video');
+    if(vidSrc){
+      skillVideoPreview.querySelector('video').src = vidSrc;
+      skillVideoPreview.style.display = 'block';
+    }
+  });
+  skill.addEventListener('mouseleave', () => {
+    skillVideoPreview.querySelector('video').src = '';
+    skillVideoPreview.style.display = 'none';
+  });
+});
+</script>
+
+</body>
+</html>
