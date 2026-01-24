@@ -88,6 +88,40 @@ nav button:hover {
   transform: translateY(2px);
 }
 
+/* Brand Campaign Hover Animation */
+.brand-hover {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.brand-hover::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    #6dbb4b, #d85525, #f9d117, #f29c2c, #d85525, #c92a2b, #a3172b, #e8346d, #e8346d
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.5s ease;
+  transform: scale(0.5) rotate(0deg);
+  z-index: 0;
+}
+
+.brand-hover:hover::before {
+  opacity: 0.7;
+  transform: scale(1.2) rotate(360deg);
+}
+
+.project-panel.brand-hover {
+  position: relative;
+  z-index: 1; /* Keep the text above the gradient */
+}
+
+
 nav button.active {
   box-shadow: inset 6px 6px 14px #bfc1c2, inset -6px -6px 14px #ffffff;
 }
@@ -353,7 +387,7 @@ nav button.active {
 
     <div class="creative-skills">
       <h2>Creative Skills</h2>
-       <p class="creative-hint">Hover over the bars to preview my work</p>
+	<p class="creative-hint">Hover over the bars to preview my work</p>
       <div class="skill" data-video="media/videos/graphic.mp4">
         <span class="skill-name">Graphic Design</span>
         <div class="skill-bar-container" data-video="media/videos/graphic.mp4">
@@ -362,7 +396,7 @@ nav button.active {
       </div>
       <div class="skill" data-video="media/videos/Minigun_Wireframe_2_Compressed.mp4">
         <span class="skill-name">3D Design</span>
-        <div class="skill-bar-container" data-video="media/videos/Minigun_Wireframe_2_Compressed.mp4">
+        <div class="skill-bar-container" data-video="media/videos/Minigun_Wireframe_2_Compressed.mp44">
           <div class="skill-bar" data-gradient="3D Design" style="--skill-level:75%; --bar-color:#6a11cb"></div>
         </div>
       </div>
@@ -399,7 +433,7 @@ nav button.active {
   <section id="projects" class="section">
     <h2>Projects</h2>
     <div class="project-container">
-      <div class="project-panel" onclick="window.open('projects/brand-campaign.html', '_blank')">Brand Campaign</div>
+      <div class="project-panel" onclick="window.open('https://zackydesigns.github.io/KAPorfolio/', '_blank')">Brand Campaign</div>
       <div class="project-panel" onclick="window.open('projects/animated-short.html', '_blank')">Animated Short</div>
       <div class="project-panel" onclick="window.open('projects/3d-visual.html', '_blank')">3D Product Visualization</div>
     </div>
@@ -407,7 +441,7 @@ nav button.active {
 
   <section id="contact" class="section">
     <h2>Contact Me</h2>
-    <p>Phone: +27 72 305 9959</p>
+    <p>Phone: +27 79 714 4594</p>
     <p>Email: zackyportfolio@gmail.com</p>
     <p>Portfolio: <a href="https://your-portfolio-link.com" target="_blank">View My Work</a></p>
   </section>
@@ -454,7 +488,6 @@ document.querySelectorAll('.skill-wrapper').forEach(wrapper => {
     circle.style.transition = 'stroke-dashoffset 1.5s ease';
     circle.style.strokeDashoffset = circumference - (circumference * skillData[label] / 100);
   });
-  // Keep the percentage after hover
   wrapper.addEventListener('mouseleave', () => {
     circle.style.strokeDashoffset = circumference - (circumference * skillData[label] / 100);
   });
